@@ -1,4 +1,4 @@
-def processData():
+def process_data():
   """
   Function that reads the 'uk_iu-ud-train.conllu' data file and extracts
   sentances, words, tags, features.
@@ -46,3 +46,5 @@ def processData():
         
     return data_set
 
+if __name__ == "__main__":
+  print(process_data())
