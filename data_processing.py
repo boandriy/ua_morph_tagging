@@ -40,7 +40,7 @@ def process_data():
       if(len(words)>0):
         # End of 1 sentance, apending words, tags, features to data entry
         # and appending data_entry to data_set. After that cleaning data_
-        # entry for next sentance. 
+        # entry for next sentence.
         data_entry.append(words)
         data_entry.append(tags)
         data_entry.append(features)
@@ -79,7 +79,7 @@ def extract_features(sentence, voc, tags_voc):
     :param sentence: sentence, [words],[tags],[features]
     :return: features_list, labels_list
     """
-    features_list = None
+    features_list = []
     labels_list = []
     if not "START_SENTENCE" in tags_voc:
         tags_voc.append("START_SENTENCE")
@@ -104,25 +104,20 @@ def extract_features(sentence, voc, tags_voc):
         is_end = np.zeros(1) if i < len(sentence[1])-1 else np.ones(1)
 
         feature_vector = np.hstack((word_to_vec, last_tag_to_vec, is_end))
+        features_list.append(feature_vector)
 
-        if features_list is None:
-            features_list = feature_vector
-        else:
-            features_list = np.vstack((features_list, feature_vector))
-
+    features_list = np.array(np.vstack(features_list), dtype=np.int8)
     return features_list, labels_list
 
 
 def get_dataset(prepared_data, voc, tags_voc):
-    X, y = None, []
+    X, y = [], []
 
-    for sentence in prepared_data:
+    for i, sentence in enumerate(prepared_data):
+        print(i)
         ftrs, lbls = extract_features(sentence, voc, tags_voc)
-        if X is None:
-            X = ftrs
-        else:
-            X = np.vstack((X,ftrs))
-        y.append(lbls)
+        X.extend(ftrs)
+        y.extend(lbls)
 
     return X, y
 
@@ -133,7 +128,8 @@ if __name__ == "__main__":
     words = create_language_voc(processed_data)
     tags = extract_morph_tags(processed_data)
     X, y = get_dataset(processed_data, words, tags)
-
+    del processed_data
+    X = np.array(X, dtype=np.int8)
     model = LogisticRegression()
     model.fit(X,y)
     print(model.score(X,y))
