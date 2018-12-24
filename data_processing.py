@@ -7,6 +7,9 @@ def process_data():
   Words list contains each word of sentance in right order.
   Tags list contains tag for each word of the sentance in right order.
   Features list contains features for each word of the sentance in right order.
+  tags contain :
+  {'CCONJ', 'SCONJ', 'NOUN', 'PUNCT', 'PRON', 'ADP', 'ADJ', 'VERB', 'ADV', 'PART', 'X', 'SYM', 'NUM', 'AUX', 'PROPN', 'DET', '_', 'INTJ'}
+  where X tag is a word from foreign language.
   """
   
   file = open("data/uk_iu-ud.conllu","r", encoding="utf-8")
@@ -25,7 +28,7 @@ def process_data():
     if(line[0].isdigit()):
       #generating words, tags and features
       word_tag_feature = line.split("\t")
-      words.append(word_tag_feature[1])
+      words.append(word_tag_feature[2])
       tags.append(word_tag_feature[3])
       features.append(" ".join(word_tag_feature[4:]).strip("\n"))
       continue
@@ -45,9 +48,27 @@ def process_data():
   file.close()
   return data_set
 
+def create_language_voc(data_set):
+    # Function takes data set as parameter and returns unique set of words in data set.
+    word_set = set()
+    for lst in data_set:
+        for word in lst[1]:
+            word_set.add(word)
+    return word_set
 
-def create_language_voc():
-  pass
+
+def extract_morph_tags(data_set):
+    # Function takes data set as parameter and returns unique set of tags in data set.
+    tags_set = set()
+    for lst in data_set:
+        for tag in lst[2]:
+            tags_set.add(tag)
+    return tags_set
+
+
 
 if __name__ == "__main__":
-    print(process_data())
+    procesed_data = process_data()
+    print(procesed_data)
+    words = create_language_voc(procesed_data)
+    tags = extract_morph_tags(procesed_data)
