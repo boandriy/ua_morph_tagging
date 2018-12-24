@@ -42,9 +42,12 @@ def process_data():
         words = []
         tags = []
         features = []
-    file.close()
-        
-    return data_set
+  file.close()
+  return data_set
+
+
+def create_language_voc():
+  pass
 
 if __name__ == "__main__":
     print(process_data())
