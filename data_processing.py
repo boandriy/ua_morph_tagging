@@ -114,7 +114,6 @@ def get_dataset(prepared_data, voc, tags_voc):
     X, y = [], []
 
     for i, sentence in enumerate(prepared_data):
-        print(i)
         ftrs, lbls = extract_features(sentence, voc, tags_voc)
         X.extend(ftrs)
         y.extend(lbls)
@@ -129,7 +128,7 @@ if __name__ == "__main__":
     tags = extract_morph_tags(processed_data)
     X, y = get_dataset(processed_data, words, tags)
     del processed_data
-    X = np.array(X, dtype=np.int8)
+    X = np.array(X, dtsype=np.int8)
     model = LogisticRegression()
     model.fit(X,y)
     print(model.score(X,y))
